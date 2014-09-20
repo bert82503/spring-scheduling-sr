@@ -19,7 +19,10 @@ package org.springframework.core.task;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
- * Exception thrown when a {@link TaskExecutor} rejects to accept
+ * 当任务执行器拒绝接受一个给定的执行任务时，抛出该异常。
+ * 继承自JDK的任务被拒绝执行异常(RejectedExecutionException)。
+ * 
+ * <p>Exception thrown when a {@link TaskExecutor} rejects to accept
  * a given task for execution.
  *
  * @author Juergen Hoeller
@@ -32,7 +35,7 @@ public class TaskRejectedException extends RejectedExecutionException {
 
 	/**
 	 * Create a new {@code TaskRejectedException}
-	 * with the specified detail message and no root cause.
+	 * with the specified detail message and no root cause. (丢失错误根源信息，创建根源错误时使用)
 	 * @param msg the detail message
 	 */
 	public TaskRejectedException(String msg) {
@@ -41,7 +44,7 @@ public class TaskRejectedException extends RejectedExecutionException {
 
 	/**
 	 * Create a new {@code TaskRejectedException}
-	 * with the specified detail message and the given root cause.
+	 * with the specified detail message and the given root cause. (包含给定的错误根源信息，建议使用它创建对象！)
 	 * @param msg the detail message
 	 * @param cause the root cause (usually from using an underlying
 	 * API such as the {@code java.util.concurrent} package)
