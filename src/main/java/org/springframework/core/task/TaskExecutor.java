@@ -19,14 +19,25 @@ package org.springframework.core.task;
 import java.util.concurrent.Executor;
 
 /**
- * Simple task executor interface that abstracts the execution
+ * 简单的任务执行器接口，其抽象一个{@link Runnable}的执行。
+ * 
+ * <p>实现类可以使用各种不同的执行策略，如 同步、异步、使用线程池 等。
+ * 
+ * 
+ * <p><font color="red">
+ * 等价于JDK 1.5的{@link Executor}接口。</font>
+ * 在Spring 3.0中扩展它，便于用户可以声明一个Executor的依赖，并接受任何的TaskExecutor实现。<font color="red">
+ * 本接口仍然独立于标准的Executor接口，主要是为了向后兼容使用JDK 1.4的Spring 2.x。</font>
+ * 
+ * 
+ * <p>Simple task executor interface that abstracts the execution
  * of a {@link Runnable}.
  *
  * <p>Implementations can use all sorts of different execution strategies,
  * such as: synchronous, asynchronous, using a thread pool, and more.
  *
- * <p>Equivalent to JDK 1.5's {@link java.util.concurrent.Executor}
- * interface; extending it now in Spring 3.0, so that clients may declare
+ * <p>Equivalent to JDK 1.5's {@link Executor} interface;
+ * extending it now in Spring 3.0, so that clients may declare
  * a dependency on an Executor and receive any TaskExecutor implementation.
  * This interface remains separate from the standard Executor interface
  * mainly for backwards compatibility with JDK 1.4 in Spring 2.x.
