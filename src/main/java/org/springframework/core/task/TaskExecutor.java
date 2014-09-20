@@ -23,11 +23,10 @@ import java.util.concurrent.Executor;
  * 
  * <p>实现类可以使用各种不同的执行策略，如 同步、异步、使用线程池 等。
  * 
- * 
  * <p><font color="red">
  * 等价于JDK 1.5的{@link Executor}接口。</font>
- * 在Spring 3.0中扩展它，便于用户可以声明一个Executor的依赖，并接受任何的TaskExecutor实现。<font color="red">
- * 本接口仍然独立于标准的Executor接口，主要是为了向后兼容使用JDK 1.4的Spring 2.x。</font>
+ * 在Spring 3.0中扩展它，(原因)便于用户可以声明一个Executor的依赖，并接收任何TaskExecutor实现。<font color="red">
+ * 本接口仍然独立于标准的Executor接口，(原因)主要是为了向后兼容使用JDK 1.4的Spring 2.x。</font>
  * 
  * 
  * <p>Simple task executor interface that abstracts the execution
@@ -49,12 +48,20 @@ import java.util.concurrent.Executor;
 public interface TaskExecutor extends Executor {
 
 	/**
-	 * Execute the given {@code task}.
+	 * 执行一个给定的<b>任务({@code task})</b>。
+	 * 
+	 * <p>如果实现类<font color="red">使用<b>异步执行</b>策略，调用会立即返回</font>；
+	 * 如果实现类<font color="red">使用<b>同步执行</b>策略，调用会阻塞</font>。
+	 * 
+	 * 
+	 * <p>Execute the given {@code task}.
+	 * 
 	 * <p>The call might return immediately if the implementation uses
 	 * an asynchronous execution strategy, or might block in the case
 	 * of synchronous execution.
-	 * @param task the {@code Runnable} to execute (never {@code null})
-	 * @throws TaskRejectedException if the given task was not accepted
+	 * 
+	 * @param task the {@code Runnable} to execute (never {@code null}, 不能为null)
+	 * @throws TaskRejectedException if the given task was not accepted (如果给定的任务不被接受)
 	 */
 	void execute(Runnable task);
 
