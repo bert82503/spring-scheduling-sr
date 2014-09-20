@@ -34,7 +34,23 @@ import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.util.Assert;
 
 /**
- * JavaBean that allows for configuring a JDK 1.5 {@link java.util.concurrent.ThreadPoolExecutor}
+ * 允许以bean方式配置一个JDK 1.5的ThreadPoolExecutor的JavaBean，并作为一个Spring的TaskExecutor暴露。
+ * 本类非常适用于管理和监控，其提供了一些有用的属性。如，核心可用连接数、
+ * 最大可用连接数、队列容量、连接存活秒数、当前连接数、活跃连接数量。
+ * 
+ * <p>可选方法是，可以直接使用构造器注入来设置一个ThreadPoolExecutor实例，或者
+ * 使用一个指向JDK 1.5 Executors类的工厂方法定义。
+ * 为了暴露这个原始的执行器(Executor)作为一个Spring的任务执行器(TaskExecutor)，
+ * 只需使用一个ConcurrentTaskExecutor适配器来简单包装一下。
+ * 
+ * <p><b>注意：</b>本类实现Spring的TaskExecutor接口和JDK 1.5 Executor接口。
+ * 前者是主接口，后者只是作为辅助服务。出于这个原因，异常处理遵循TaskExecutor约定，
+ * 而非Executor约定。
+ * 
+ * 如果你喜欢暴露原生的ExecutorService，那么考虑使用ThreadPoolExecutorFactoryBean来代替这个类。
+ * 
+ * 
+ * <p>JavaBean that allows for configuring a JDK 1.5 {@link java.util.concurrent.ThreadPoolExecutor}
  * in bean style (through its "corePoolSize", "maxPoolSize", "keepAliveSeconds", "queueCapacity"
  * properties) and exposing it as a Spring {@link org.springframework.core.task.TaskExecutor}.
  * This class is also well suited for management and monitoring (e.g. through JMX),
