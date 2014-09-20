@@ -47,7 +47,7 @@ import org.springframework.util.Assert;
  * 前者是主接口，后者只是作为辅助服务。出于这个原因，异常处理遵循TaskExecutor约定，
  * 而非Executor约定。
  * 
- * 如果你喜欢暴露原生的ExecutorService，那么考虑使用ThreadPoolExecutorFactoryBean来代替这个类。
+ * <p><b>如果你喜欢暴露原生的ExecutorService，那么考虑使用ThreadPoolExecutorFactoryBean来代替这个类。</b>
  * 
  * 
  * <p>JavaBean that allows for configuring a JDK 1.5 {@link java.util.concurrent.ThreadPoolExecutor}
