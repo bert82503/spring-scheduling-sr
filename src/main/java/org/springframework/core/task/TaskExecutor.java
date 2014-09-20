@@ -63,6 +63,7 @@ public interface TaskExecutor extends Executor {
 	 * @param task the {@code Runnable} to execute (never {@code null}, 不能为null)
 	 * @throws TaskRejectedException if the given task was not accepted (如果给定的任务不被接受)
 	 */
+//	@Override
 	void execute(Runnable task);
 
 }
