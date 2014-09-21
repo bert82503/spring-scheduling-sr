@@ -20,7 +20,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
- * Extended interface for asynchronous {@link TaskExecutor} implementations,
+ * 异步任务执行器实现的扩展接口(继承自TaskExecutor)，提供一个重载的{@link #execute(Runnable, long)}变体方法。
+ * 该方法使用一个启动超时参数来更好地支持携带结果的任务(Callable)。
+ * 
+ * <p><b>注意：</b>执行器辅助类(Executors)包含一组方法，其可以转换某些常见的类似于闭包的对象。
+ * 例如，在任务执行之前将特权行动(PrivilegedAction)转换为{@link Callable}。
+ * 
+ * <p>实现本接口也预示着{@link #execute(Runnable)}方法不会在调用者线程中执行其Runnable，
+ * 而是在其他线程中异步执行。
+ * 
+ * 
+ * <p>Extended interface for asynchronous {@link TaskExecutor} implementations,
  * offering an overloaded {@link #execute(Runnable, long)} variant with a start
  * timeout parameter as well support for {@link java.util.concurrent.Callable}.
  *
