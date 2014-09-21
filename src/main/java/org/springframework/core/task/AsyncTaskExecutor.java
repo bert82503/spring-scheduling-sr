@@ -77,25 +77,29 @@ public interface AsyncTaskExecutor extends TaskExecutor {
 	void execute(Runnable task, long startTimeout);
 
 	/**
-	 * 提交一个可运行(Runnable)的任务，为了执行和接收一个表示异步计算的结果(Future)。
+	 * 提交一个可运行(Runnable)的任务，为了执行和接收一个表示该任务异步计算的结果(Future)。
 	 * Future在完成后，会返回一个{@code null}的结果。
 	 * 
 	 * <p>Submit a Runnable task for execution, receiving a Future representing that task.
 	 * The Future will return a {@code null} result upon completion.
 	 * 
-	 * @param task the {@code Runnable} to execute (never {@code null})
+	 * @param task the {@code Runnable} to execute (never {@code null}) (待执行的可运行任务)
 	 * @return a Future representing pending completion of the task (表示等待任务完成的一个Future)
-	 * @throws TaskRejectedException if the given task was not accepted
+	 * @throws TaskRejectedException if the given task was not accepted (给定的任务不被接受)
 	 * @since 3.0
 	 */
 	Future<?> submit(Runnable task);
 
 	/**
-	 * Submit a Callable task for execution, receiving a Future representing that task.
+	 * 提交一个可调用(Callable)的任务，为了执行和接收一个表示该任务异步计算的结果(Future)。
+	 * Future在完成后，会返回Callable的结果。
+	 * 
+	 * <p>Submit a Callable task for execution, receiving a Future representing that task.
 	 * The Future will return the Callable's result upon completion.
-	 * @param task the {@code Callable} to execute (never {@code null})
-	 * @return a Future representing pending completion of the task
-	 * @throws TaskRejectedException if the given task was not accepted
+	 * 
+	 * @param task the {@code Callable} to execute (never {@code null}) (待执行的可调用任务)
+	 * @return a Future representing pending completion of the task (表示等待任务完成的一个Future)
+	 * @throws TaskRejectedException if the given task was not accepted (给定的任务不被接受)
 	 * @since 3.0
 	 */
 	<T> Future<T> submit(Callable<T> task);
