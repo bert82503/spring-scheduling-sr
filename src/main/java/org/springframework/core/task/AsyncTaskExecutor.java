@@ -51,23 +51,28 @@ import java.util.concurrent.Future;
  */
 public interface AsyncTaskExecutor extends TaskExecutor {
 
-	/** Constant that indicates immediate execution */
+	/** Constant that indicates immediate execution (表示立即执行) */
 	long TIMEOUT_IMMEDIATE = 0;
 
-	/** Constant that indicates no time limit */
+	/** Constant that indicates no time limit (表示没有时间限制) */
 	long TIMEOUT_INDEFINITE = Long.MAX_VALUE;
 
 
 	/**
-	 * Execute the given {@code task}.
-	 * @param task the {@code Runnable} to execute (never {@code null})
+	 * 执行一个给定的<b>任务({@code task})</b>。
+	 * 
+	 * <p>Execute the given {@code task}.
+	 * 
+	 * @param task the {@code Runnable} to execute (never {@code null}, 不能为null)
 	 * @param startTimeout the time duration (milliseconds) within which the task is
 	 * supposed to start. This is intended as a hint to the executor, allowing for
 	 * preferred handling of immediate tasks. Typical values are {@link #TIMEOUT_IMMEDIATE}
 	 * or {@link #TIMEOUT_INDEFINITE} (the default as used by {@link #execute(Runnable)}).
+	 * 从任务开始执行到现在的持续时间(毫秒)，这意味着执行器的一个提示，允许即时任务被优先处理。
+	 * {@link #execute(Runnable)}默认使用没有时间限制。
 	 * @throws TaskTimeoutException in case of the task being rejected because
-	 * of the timeout (i.e. it cannot be started in time)
-	 * @throws TaskRejectedException if the given task was not accepted
+	 * of the timeout (i.e. it cannot be started in time) (任务由于超时被拒绝)
+	 * @throws TaskRejectedException if the given task was not accepted (给定的任务不被接受)
 	 */
 	void execute(Runnable task, long startTimeout);
 
