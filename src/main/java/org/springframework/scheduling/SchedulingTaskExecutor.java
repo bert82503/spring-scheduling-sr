@@ -19,7 +19,12 @@ package org.springframework.scheduling;
 import org.springframework.core.task.AsyncTaskExecutor;
 
 /**
- * A {@link org.springframework.core.task.TaskExecutor} extension exposing
+ * 任务执行器的扩展接口，暴露与潜在任务提交者相关的调度特性。
+ * 
+ * <p>鼓励调度客户端提交与暴露的{@code TaskExecutor}接口实现引用相匹配的可运行任务。
+ * 
+ * 
+ * <p>A {@link org.springframework.core.task.TaskExecutor} extension exposing
  * scheduling characteristics that are relevant to potential task submitters.
  *
  * <p>Scheduling clients are encouraged to submit
