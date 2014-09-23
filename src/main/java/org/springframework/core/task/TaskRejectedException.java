@@ -19,7 +19,7 @@ package org.springframework.core.task;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
- * 当任务执行器拒绝接受一个给定的执行任务时，抛出该异常。
+ * 当任务执行器({@link TaskExecutor})拒绝接受一个给定的执行任务时，抛出该异常。
  * 继承自JDK的任务被拒绝执行异常(RejectedExecutionException)。
  * 
  * <p>Exception thrown when a {@link TaskExecutor} rejects to accept
