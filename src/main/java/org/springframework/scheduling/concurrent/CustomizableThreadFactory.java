@@ -21,7 +21,12 @@ import java.util.concurrent.ThreadFactory;
 import org.springframework.util.CustomizableThreadCreator;
 
 /**
- * Implementation of the JDK 1.5 {@link java.util.concurrent.ThreadFactory}
+ * 实现JDK 1.5的线程工厂({@link ThreadFactory})接口，
+ * 允许自定义创建的线程(如 线程名称、线程优先级 等)。
+ * 
+ * <p>可配置选项的详细信息，请查看基类{@link CustomizableThreadCreator}。
+ * 
+ * <p>Implementation of the JDK 1.5 {@link java.util.concurrent.ThreadFactory}
  * interface, allowing for customizing the created threads (name, priority, etc).
  *
  * <p>See the base class {@link org.springframework.util.CustomizableThreadCreator}
