@@ -55,7 +55,10 @@ public class CustomizableThreadFactory extends CustomizableThreadCreator impleme
 		super(threadNamePrefix);
 	}
 
-
+	/*
+	 * 为给定的可运行任务创建一个新的线程。
+	 */
+	@Override
 	public Thread newThread(Runnable runnable) {
 		return createThread(runnable);
 	}
