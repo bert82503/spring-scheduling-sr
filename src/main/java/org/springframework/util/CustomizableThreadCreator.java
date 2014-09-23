@@ -19,7 +19,13 @@ package org.springframework.util;
 import java.io.Serializable;
 
 /**
- * Simple customizable helper class for creating new {@link Thread} instances.
+ * 为创建新的线程实例提供简单地自定义辅助类。
+ * 它提供各种bean属性，包括线程名称的前缀、线程的优先级、
+ * 是否为守护线程、所在的线程组 等。
+ * 
+ * <p>作为线程工厂({@link CustomizableThreadFactory})的基类
+ * 
+ * <p>Simple customizable helper class for creating new {@link Thread} instances.
  * Provides various bean properties: thread name prefix, thread priority, etc.
  *
  * <p>Serves as base class for thread factories such as
