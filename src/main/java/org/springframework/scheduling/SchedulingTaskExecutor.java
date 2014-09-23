@@ -40,20 +40,33 @@ import org.springframework.core.task.AsyncTaskExecutor;
 public interface SchedulingTaskExecutor extends AsyncTaskExecutor {
 
 	/**
-	 * Does this {@code TaskExecutor} prefer short-lived tasks over
+	 * 本任务执行器是否喜欢短周期(short-lived)的任务胜过长周期(long-lived)的任务？
+	 * 
+	 * <p>一个调度任务执行器实现可以表明它是否喜欢所提交的任务，
+	 * 这些任务能在单个任务执行中尽可能做少量的工作。
+	 * 例如，提交的任务可能会破坏一个重复的循环之后进入后续的独立子任务。
+	 * 
+	 * <p>这应该算是一个提示。当然，任务执行器(TaskExecutor)接口客户端可以自由地忽略此标记，
+	 * 但调度任务执行器(SchedulingTaskExecutor)接口需要关注此标记。
+	 * 然而，线程池通常倾向于短周期的任务，以便能够进行更精细地调度。
+	 * 
+	 * <p>Does this {@code TaskExecutor} prefer short-lived tasks over
 	 * long-lived tasks?
+	 * 
 	 * <p>A {@code SchedulingTaskExecutor} implementation can indicate
 	 * whether it prefers submitted tasks to perform as little work as they
 	 * can within a single task execution. For example, submitted tasks
 	 * might break a repeated loop into individual subtasks which submit a
 	 * follow-up task afterwards (if feasible).
+	 * 
 	 * <p>This should be considered a hint. Of course {@code TaskExecutor}
 	 * clients are free to ignore this flag and hence the
 	 * {@code SchedulingTaskExecutor} interface overall. However, thread
 	 * pools will usually indicated a preference for short-lived tasks, to be
 	 * able to perform more fine-grained scheduling.
+	 * 
 	 * @return {@code true} if this {@code TaskExecutor} prefers
-	 * short-lived tasks
+	 * short-lived tasks (如果任务执行器喜欢短周期的任务，则返回{@code true}。)
 	 */
 	boolean prefersShortLivedTasks();
 
