@@ -30,7 +30,10 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * Base class for classes that are setting up a
+ * 设置一个执行器服务({@link ExecutorService})的基类，通常是一个线程池执行器({@link ThreadPoolExecutor})。
+ * 定义公共的配置设置项和生命周期处理。
+ * 
+ * <p>Base class for classes that are setting up a
  * {@code java.util.concurrent.ExecutorService}
  * (typically a {@link java.util.concurrent.ThreadPoolExecutor}).
  * Defines common configuration settings and common lifecycle handling.
