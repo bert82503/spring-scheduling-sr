@@ -31,7 +31,19 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * JavaBean that allows for configuring a JDK 1.5 {@link java.util.concurrent.ThreadPoolExecutor}
+ * 允许以bean方式配置一个JDK 1.5的线程池执行器({@link ThreadPoolExecutor})的Java Bean
+ * (通过其"核心线程池大小"、"最大可用线程池大小"、"线程存活时间"、"队列容量"属性)，
+ * 并将它作为一个原生的执行器服务类型({@link ExecutorService})的bean引用暴露出来。
+ * 
+ * <p><font color="red">继承自Spring的工厂Bean({@link FactoryBean<ExecutorService>})</font>
+ * 
+ * <p>可选的，可以直接使用"构造器注入方式"来设置一个线程池执行器(ThreadPoolExecutor)实例，
+ * 或者使用指向JDK 1.5的执行器工具类({@link Executors})的"工厂方法"定义。
+ * 
+ * <p><b>如果你需要一个基于时间的调度执行器服务({@link ScheduledExecutorService})，
+ * 可以考虑{@link ScheduledExecutorFactoryBean}。</b>
+ * 
+ * <p>JavaBean that allows for configuring a JDK 1.5 {@link java.util.concurrent.ThreadPoolExecutor}
  * in bean style (through its "corePoolSize", "maxPoolSize", "keepAliveSeconds",
  * "queueCapacity" properties) and exposing it as a bean reference of its native
  * {@link java.util.concurrent.ExecutorService} type.
@@ -53,6 +65,7 @@ import org.springframework.beans.factory.InitializingBean;
 public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 		implements FactoryBean<ExecutorService>, InitializingBean, DisposableBean {
 
+	// 核心属性的默认值与ThreadPoolTaskExecutor里的定义保持一致
 	private int corePoolSize = 1;
 
 	private int maxPoolSize = Integer.MAX_VALUE;
@@ -63,11 +76,14 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 
 	private int queueCapacity = Integer.MAX_VALUE;
 
+
 	private boolean exposeUnconfigurableExecutor = false;
 
+	// [core] 被暴露的"执行器服务"
 	private ExecutorService exposedExecutor;
 
 
+	// 核心属性的setter方法与ThreadPoolTaskExecutor里的定义类似，但未使用"加锁机制"
 	/**
 	 * Set the ThreadPoolExecutor's core pool size.
 	 * Default is 1.
@@ -116,6 +132,7 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 	public void setQueueCapacity(int queueCapacity) {
 		this.queueCapacity = queueCapacity;
 	}
+	
 
 	/**
 	 * Specify whether this FactoryBean should expose an unconfigurable
@@ -130,6 +147,7 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 	}
 
 
+	@Override
 	protected ExecutorService initializeExecutor(
 			ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
 
@@ -148,9 +166,16 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 	}
 
 	/**
-	 * Create a new instance of {@link ThreadPoolExecutor} or a subclass thereof.
+	 * 创建一个新的线程池执行器({@link ThreadPoolExecutor})或其子类的实例。
+	 * 
+	 * <p>默认实现是创建一个标准的线程池执行器({@link ThreadPoolExecutor})，
+	 * 但可以提供一个自定义的线程池执行器子类来覆盖它。
+	 * 
+	 * <p>Create a new instance of {@link ThreadPoolExecutor} or a subclass thereof.
+	 * 
 	 * <p>The default implementation creates a standard {@link ThreadPoolExecutor}.
 	 * Can be overridden to provide custom {@link ThreadPoolExecutor} subclasses.
+	 * 
 	 * @param corePoolSize the specified core pool size
 	 * @param maxPoolSize the specified maximum pool size
 	 * @param keepAliveSeconds the specified keep-alive time in seconds
@@ -187,14 +212,29 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 	}
 
 
+	// # 覆盖"工厂Bean"方法
+	/*
+	 * 返回由这个工厂管理的对象的一个实例。
+	 */
+	@Override
 	public ExecutorService getObject() throws Exception {
 		return this.exposedExecutor;
 	}
 
+	
+	/*
+	 * 返回由这个工厂创建的对象类型。
+	 */
+	@Override
 	public Class<? extends ExecutorService> getObjectType() {
 		return (this.exposedExecutor != null ? this.exposedExecutor.getClass() : ExecutorService.class);
 	}
 
+	/*
+	 * 由这个工厂管理的对象是否是一个单实例？
+	 * 是
+	 */
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}

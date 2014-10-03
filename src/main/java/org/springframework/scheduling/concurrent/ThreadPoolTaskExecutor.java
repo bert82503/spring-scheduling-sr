@@ -92,7 +92,7 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport impleme
 	// [core] 最大可用线程池大小，默认为无限制
 	private int maxPoolSize = Integer.MAX_VALUE;
 
-	// [core] 连接存活时间，默认为60秒
+	// [core] 线程存活时间，默认为60秒
 	private int keepAliveSeconds = 60;
 
 	// 是否允许核心线程池超时，默认为false，即无超时
