@@ -28,7 +28,10 @@ import org.springframework.core.task.TaskRejectedException;
 import org.springframework.util.Assert;
 
 /**
- * Adapter that takes a JDK {@code java.util.concurrent.Executor} and
+ * 持有一个JDK执行器({@link Executor})的适配器，并将其暴露为一个Spring的任务执行器({@link TaskExecutor})。
+ * 也可以探测一个扩展的执行器服务({@link ExecutorService})，通过适配异步任务执行器({@link AsyncTaskExecutor})接口。
+ * 
+ * <p>Adapter that takes a JDK {@code java.util.concurrent.Executor} and
  * exposes a Spring {@link org.springframework.core.task.TaskExecutor} for it.
  * Also detects an extended {@code java.util.concurrent.ExecutorService}, adapting
  * the {@link org.springframework.core.task.AsyncTaskExecutor} interface accordingly.
@@ -41,12 +44,15 @@ import org.springframework.util.Assert;
  */
 public class TaskExecutorAdapter implements AsyncTaskExecutor {
 
+	// JDK的并发执行器
 	private final Executor concurrentExecutor;
 
 
 	/**
-	 * Create a new TaskExecutorAdapter,
-	 * using the given JDK concurrent executor.
+	 * 使用给定的JDK并发执行器来创建一个新的任务执行器适配器。
+	 * 
+	 * <p>Create a new TaskExecutorAdapter, using the given JDK concurrent executor.
+	 * 
 	 * @param concurrentExecutor the JDK concurrent executor to delegate to
 	 */
 	public TaskExecutorAdapter(Executor concurrentExecutor) {
@@ -55,10 +61,14 @@ public class TaskExecutorAdapter implements AsyncTaskExecutor {
 	}
 
 
+	// # 任务执行器
 	/**
-	 * Delegates to the specified JDK concurrent executor.
+	 * 委托到指定的JDK并发执行器。
+	 * 
+	 * <p>Delegates to the specified JDK concurrent executor.
 	 * @see java.util.concurrent.Executor#execute(Runnable)
 	 */
+	@Override
 	public void execute(Runnable task) {
 		try {
 			this.concurrentExecutor.execute(task);
@@ -69,16 +79,19 @@ public class TaskExecutorAdapter implements AsyncTaskExecutor {
 		}
 	}
 
+	// # 异步任务执行器
+	@Override
 	public void execute(Runnable task, long startTimeout) {
 		execute(task);
 	}
 
+	@Override
 	public Future<?> submit(Runnable task) {
 		try {
-			if (this.concurrentExecutor instanceof ExecutorService) {
+			if (this.concurrentExecutor instanceof ExecutorService) { // 为"执行器服务"类实例
 				return ((ExecutorService) this.concurrentExecutor).submit(task);
 			}
-			else {
+			else { // 否则，使用一个"可取消的异步计算任务(FutureTask)"执行任务
 				FutureTask<Object> future = new FutureTask<Object>(task, null);
 				this.concurrentExecutor.execute(future);
 				return future;
@@ -90,12 +103,13 @@ public class TaskExecutorAdapter implements AsyncTaskExecutor {
 		}
 	}
 
+	@Override
 	public <T> Future<T> submit(Callable<T> task) {
 		try {
-			if (this.concurrentExecutor instanceof ExecutorService) {
+			if (this.concurrentExecutor instanceof ExecutorService) { // 为"执行器服务"类实例
 				return ((ExecutorService) this.concurrentExecutor).submit(task);
 			}
-			else {
+			else { // 否则，使用一个"可取消的异步计算任务(FutureTask)"执行任务
 				FutureTask<T> future = new FutureTask<T>(task);
 				this.concurrentExecutor.execute(future);
 				return future;
