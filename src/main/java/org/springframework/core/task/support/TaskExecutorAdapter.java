@@ -42,9 +42,13 @@ import org.springframework.util.Assert;
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.Executors
  */
-public class TaskExecutorAdapter implements AsyncTaskExecutor {
+public class TaskExecutorAdapter implements AsyncTaskExecutor { // [目标接口]
 
-	// JDK的并发执行器
+	/*
+	 * 适配器模式 定义，见《Head First 设计模式》P243
+	 * 示例：将"枚举"适配到"迭代器"，P249
+	 */
+	// [被适配者接口] JDK的并发执行器
 	private final Executor concurrentExecutor;
 
 
