@@ -101,6 +101,7 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport impleme
 	// [core] 队列容量，默认为无限制
 	private int queueCapacity = Integer.MAX_VALUE;
 
+
 	// [背后实现] 线程池执行器
 	private ThreadPoolExecutor threadPoolExecutor;
 
@@ -222,7 +223,7 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport impleme
 	}
 
 
-	// # 初始化线程池执行器
+	// # 初始化"线程池执行器"(ExecutorConfigurationSupport)
 	@Override
 	protected ExecutorService initializeExecutor(
 			ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
@@ -299,7 +300,8 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport impleme
 	}
 
 
-	// # 执行任务
+	// 执行任务
+	// # 任务执行器(TaskExecutor)
 	@Override
 	public void execute(Runnable task) {
 		// 1. 获取"执行器"
@@ -313,6 +315,8 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport impleme
 		}
 	}
 
+
+	// # 异步任务执行器(AsyncTaskExecutor)
 	@Override
 	public void execute(Runnable task, long startTimeout) {
 		execute(task); // 未使用"开始执行超时时间"参数
@@ -343,6 +347,8 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport impleme
 		}
 	}
 
+
+	// # 调度任务执行器(SchedulingTaskExecutor)
 	/**
 	 * 本任务执行器喜欢"短存活时间"的工作单元。
 	 * 
