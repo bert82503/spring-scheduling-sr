@@ -29,7 +29,8 @@ import org.springframework.util.Assert;
 
 /**
  * 持有一个JDK执行器({@link Executor})的适配器，并将其暴露为一个Spring的任务执行器({@link TaskExecutor})。
- * 也可以探测一个扩展的执行器服务({@link ExecutorService})，通过适配异步任务执行器({@link AsyncTaskExecutor})接口。
+ * 还可以检测一个扩展的执行器服务({@link ExecutorService})，
+ * 将其适配到异步任务执行器({@link AsyncTaskExecutor})接口。
  * 
  * <p>Adapter that takes a JDK {@code java.util.concurrent.Executor} and
  * exposes a Spring {@link org.springframework.core.task.TaskExecutor} for it.
