@@ -19,7 +19,9 @@ package org.springframework.scheduling;
 import java.util.Date;
 
 /**
- * Common interface for trigger objects that determine the next execution time
+ * 触发器对象的公共接口，用于确定与其相关的一个任务的下一次执行时间。
+ * 
+ * <p>Common interface for trigger objects that determine the next execution time
  * of a task that they get associated with.
  *
  * @author Juergen Hoeller
@@ -30,9 +32,12 @@ import java.util.Date;
 public interface Trigger {
 
 	/**
-	 * Determine the next execution time according to the given trigger context.
+	 * 根据给定的触发器上下文来确定任务的下一次执行时间。
+	 * 
+	 * <p>Determine the next execution time according to the given trigger context.
+	 * 
 	 * @param triggerContext context object encapsulating last execution times
-	 * and last completion time
+	 * and last completion time (封装任务的上次执行时间和最后完成时间的上下文对象)
 	 * @return the next execution time as defined by the trigger,
 	 * or {@code null} if the trigger won't fire anymore
 	 */
