@@ -21,22 +21,33 @@ import java.util.Date;
 import org.springframework.scheduling.TriggerContext;
 
 /**
- * Simple data holder implementation of the {@link TriggerContext} interface.
+ * 实现TriggerContext接口的简单的数据持有者。
+ * 
+ * <p>Simple data holder implementation of the {@link TriggerContext} interface.
  *
  * @author Juergen Hoeller
  * @since 3.0
  */
 public class SimpleTriggerContext implements TriggerContext {
 
+	/*
+	 * 使用volatile类型来确保应用中在多线程之间读写的可视性
+	 */
+	// 最后一次调度执行时间
 	private volatile Date lastScheduledExecutionTime;
 
+	// 最后一次实际执行时间
 	private volatile Date lastActualExecutionTime;
 
+	// 最后一次完成执行时间
 	private volatile Date lastCompletionTime;
 
 
 	/**
-	 * Update this holder's state with the latest time values.
+	 * 更新该上下文持有者的最新执行时间值的状态。
+	 * 
+	 * <p>Update this holder's state with the latest time values.
+	 * 
  	 * @param lastScheduledExecutionTime last <i>scheduled</i> execution time
 	 * @param lastActualExecutionTime last <i>actual</i> execution time
 	 * @param lastCompletionTime last completion time
@@ -48,14 +59,18 @@ public class SimpleTriggerContext implements TriggerContext {
 	}
 
 
+	// TriggerContext
+	@Override
 	public Date lastScheduledExecutionTime() {
 		return this.lastScheduledExecutionTime;
 	}
 
+	@Override
 	public Date lastActualExecutionTime() {
 		return this.lastActualExecutionTime;
 	}
 
+	@Override
 	public Date lastCompletionTime() {
 		return this.lastCompletionTime;
 	}
