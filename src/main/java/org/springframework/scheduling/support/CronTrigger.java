@@ -23,7 +23,9 @@ import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
 
 /**
- * {@link Trigger} implementation for cron expressions.
+ * cron表达式的定时触发器({@link Trigger})实现，包装一个Crontab模式的时间序列生成器({@link CronSequenceGenerator})。
+ * 
+ * <p>{@link Trigger} implementation for cron expressions.
  * Wraps a {@link CronSequenceGenerator}.
  *
  * @author Juergen Hoeller
@@ -32,6 +34,7 @@ import org.springframework.scheduling.TriggerContext;
  */
 public class CronTrigger implements Trigger {
 
+	// 一个"Crontab模式"的时间序列生成器
 	private final CronSequenceGenerator sequenceGenerator;
 
 
@@ -45,7 +48,10 @@ public class CronTrigger implements Trigger {
 	}
 
 	/**
-	 * Build a {@link CronTrigger} from the pattern provided.
+	 * 使用指定的"cron表达式"和时区来创建一个"定时触发器"对象。
+	 * 
+	 * <p>Build a {@link CronTrigger} from the pattern provided.
+	 * 
 	 * @param cronExpression a space-separated list of time fields,
 	 * following cron expression conventions
 	 * @param timeZone a time zone in which the trigger times will be generated
@@ -55,16 +61,23 @@ public class CronTrigger implements Trigger {
 	}
 
 
+	// 覆盖"触发器"(Trigger)
 	/**
-	 * Determine the next execution time according to the given trigger context.
+	 * 根据给定的触发器上下文来确定"任务的下一次执行时间"。
+	 * 
+	 * <p>任务的"下一次执行时间"是基于"上一次完成执行时间"计算出来的。
+	 * 
+	 * <p>Determine the next execution time according to the given trigger context.
+	 * 
 	 * <p>Next execution times are calculated based on the
 	 * {@linkplain TriggerContext#lastCompletionTime completion time} of the
 	 * previous execution; therefore, overlapping executions won't occur.
 	 */
+	@Override
 	public Date nextExecutionTime(TriggerContext triggerContext) {
-		Date date = triggerContext.lastCompletionTime();
+		Date date = triggerContext.lastCompletionTime(); // 最后一次完成执行时间
 		if (date != null) {
-			Date scheduled = triggerContext.lastScheduledExecutionTime();
+			Date scheduled = triggerContext.lastScheduledExecutionTime(); // 最后一次调度执行时间
 			if (scheduled != null && date.before(scheduled)) {
 				// Previous task apparently executed too early...
 				// Let's simply use the last calculated execution time then,
@@ -78,10 +91,13 @@ public class CronTrigger implements Trigger {
 		return this.sequenceGenerator.next(date);
 	}
 
+
 	public String getExpression() {
 		return this.sequenceGenerator.getExpression();
 	}
 
+
+	// 覆盖对象的方法(Object)
 	@Override
 	public boolean equals(Object obj) {
 		return (this == obj || (obj instanceof CronTrigger &&
