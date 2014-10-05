@@ -76,10 +76,10 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 
 	private int queueCapacity = Integer.MAX_VALUE;
 
-
 	private boolean exposeUnconfigurableExecutor = false;
+	
 
-	// [core] 被暴露的"执行器服务"
+	// [背后实现] 被暴露的"执行器服务"
 	private ExecutorService exposedExecutor;
 
 
@@ -212,7 +212,7 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 	}
 
 
-	// # 覆盖"工厂Bean"方法
+	// # 覆盖"工厂Bean"方法(FactoryBean)
 	/*
 	 * 返回由这个工厂管理的对象的一个实例。
 	 */

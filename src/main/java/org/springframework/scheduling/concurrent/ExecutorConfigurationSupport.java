@@ -176,14 +176,14 @@ public abstract class ExecutorConfigurationSupport extends CustomizableThreadFac
 		this.awaitTerminationSeconds = awaitTerminationSeconds;
 	}
 
-	// 在Bean工厂中设置bean的名称
+	// 在Bean工厂中设置bean的名称(BeanNameAware)
 	@Override
 	public void setBeanName(String name) {
 		this.beanName = name;
 	}
 
 
-	// # 初始化执行器服务
+	// # 初始化"执行器服务"(InitializingBean)
 	/**
 	 * 在容器应用所有属性值之后，调用初始化方法({@link #initialize()})。
 	 * 
@@ -229,7 +229,7 @@ public abstract class ExecutorConfigurationSupport extends CustomizableThreadFac
 			ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler);
 
 
-	// # 释放并关闭服务
+	// # 释放并关闭服务(DisposableBean)
 	/**
 	 * 当Bean工厂(BeanFactory)销毁任务执行器实例时，调用关闭方法({@link #shutdown()})。
 	 * 
