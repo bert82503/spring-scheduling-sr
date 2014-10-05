@@ -19,7 +19,9 @@ package org.springframework.scheduling;
 import java.util.Date;
 
 /**
- * Context object encapsulating last execution times and last completion time
+ * 封装给定任务的上次执行时间和最后完成时间的上下文对象。
+ * 
+ * <p>Context object encapsulating last execution times and last completion time
  * of a given task.
  *
  * @author Juergen Hoeller
@@ -28,19 +30,28 @@ import java.util.Date;
 public interface TriggerContext {
 
 	/**
-	 * Return the last <i>scheduled</i> execution time of the task,
+	 * 返回任务的最后一次调度执行时间。
+	 * 如果任务之前未被调度过，则返回{@code null}。
+	 * 
+	 * <p>Return the last <i>scheduled</i> execution time of the task,
 	 * or {@code null} if not scheduled before.
 	 */
 	Date lastScheduledExecutionTime();
 
 	/**
-	 * Return the last <i>actual</i> execution time of the task,
+	 * 返回任务的最后一次实际执行时间。
+	 * 如果任务之前未被调度过，则返回{@code null}。
+	 * 
+	 * <p>Return the last <i>actual</i> execution time of the task,
 	 * or {@code null} if not scheduled before.
 	 */
 	Date lastActualExecutionTime();
 
 	/**
-	 * Return the last completion time of the task,
+	 * 返回任务的最后一次完成执行时间。
+	 * 如果任务之前未被调度过，则返回{@code null}。
+	 * 
+	 * <p>Return the last completion time of the task,
 	 * or {@code null} if not scheduled before.
 	 */
 	Date lastCompletionTime();
