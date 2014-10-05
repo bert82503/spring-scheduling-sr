@@ -29,14 +29,20 @@ import java.util.TimeZone;
 import org.springframework.util.StringUtils;
 
 /**
- * Date sequence generator for a <a href="http://www.manpagez.com/man/5/crontab/">Crontab pattern</a>,
+ * 一个<a href="http://www.manpagez.com/man/5/crontab/">"Crontab模式"</a>的时间序列生成器，
+ * 允许客户端指定一个序列匹配的模式。
+ * 
+ * <p>该模式是由空格分隔的6个字段列表，分别表示秒、分、小时、天、月份、工作日。
+ * 月份和工作日名称可以由英文名的前3个字符给定。
+ * 
+ * <p>Date sequence generator for a <a href="http://www.manpagez.com/man/5/crontab/">Crontab pattern</a>,
  * allowing clients to specify a pattern that the sequence matches.
  *
  * <p>The pattern is a list of six single space-separated fields: representing
  * second, minute, hour, day, month, weekday. Month and weekday names can be
  * given as the first three letters of the English names.
  *
- * <p>Example patterns:
+ * <p>Example patterns(示例模式):
  * <ul>
  * <li>"0 0 * * * *" = the top of every hour of every day.</li>
  * <li>"*&#47;10 * * * * *" = every ten seconds.</li>
@@ -53,26 +59,39 @@ import org.springframework.util.StringUtils;
  */
 public class CronSequenceGenerator {
 
+	/*
+	 * 使用位图(BitSet)标记时间点
+	 */
+	// 一分钟是60秒
 	private final BitSet seconds = new BitSet(60);
 
+	// 一个小时是60分钟
 	private final BitSet minutes = new BitSet(60);
 
+	// 一天是24个小时
 	private final BitSet hours = new BitSet(24);
 
+	// 一周共7天
 	private final BitSet daysOfWeek = new BitSet(7);
 
+	// 一个月最多31天
 	private final BitSet daysOfMonth = new BitSet(31);
 
+	// 一年共12个月
 	private final BitSet months = new BitSet(12);
 
+
+	// Crontab模式
 	private final String expression;
 
+	// 时区
 	private final TimeZone timeZone;
 
 
 	/**
 	 * Construct a {@link CronSequenceGenerator} from the pattern provided,
 	 * using the default {@link TimeZone}.
+	 * 
 	 * @param expression a space-separated list of time fields
 	 * @throws IllegalArgumentException if the pattern cannot be parsed
 	 * @see java.util.TimeZone#getDefault()
@@ -82,8 +101,11 @@ public class CronSequenceGenerator {
 	}
 
 	/**
-	 * Construct a {@link CronSequenceGenerator} from the pattern provided,
+	 * 使用提供的"Crontab模式"和指定的时区来创建一个"时间序列生成器"对象。
+	 * 
+	 * <p>Construct a {@link CronSequenceGenerator} from the pattern provided,
 	 * using the specified {@link TimeZone}.
+	 * 
 	 * @param expression a space-separated list of time fields
 	 * @param timeZone the TimeZone to use for generated trigger times
 	 * @throws IllegalArgumentException if the pattern cannot be parsed
@@ -96,17 +118,21 @@ public class CronSequenceGenerator {
 
 
 	/**
-	 * Get the next {@link Date} in the sequence matching the Cron pattern and
+	 * 获取匹配Cron模式的下一个时间序列点。
+	 * 返回值是一个以秒为单位的整数值
+	 * 
+	 * <p>Get the next {@link Date} in the sequence matching the Cron pattern and
 	 * after the value provided. The return value will have a whole number of
 	 * seconds, and will be after the input value.
-	 * @param date a seed value
+	 * 
+	 * @param date a seed value (种子值)
 	 * @return the next value matching the pattern
 	 */
 	public Date next(Date date) {
 		/*
-		The plan:
+		The plan (计划):
 
-		1 Round up to the next whole second
+		1 Round up to the next whole second (向上舍入到下一秒)
 
 		2 If seconds match move on, otherwise find the next match:
 		2.1 If next match is in the next minute then roll forwards
@@ -128,21 +154,24 @@ public class CronSequenceGenerator {
 
 		// First, just reset the milliseconds and try to calculate from there...
 		calendar.set(Calendar.MILLISECOND, 0);
+		// 原始的时间戳
 		long originalTimestamp = calendar.getTimeInMillis();
 		doNext(calendar, calendar.get(Calendar.YEAR));
 
 		if (calendar.getTimeInMillis() == originalTimestamp) {
 			// We arrived at the original timestamp - round up to the next whole second and try again...
-			calendar.add(Calendar.SECOND, 1);
+			calendar.add(Calendar.SECOND, 1); // 加1秒钟
 			doNext(calendar, calendar.get(Calendar.YEAR));
 		}
 
 		return calendar.getTime();
 	}
 
+	// 基于dot来寻找下一个时间序列点
 	private void doNext(Calendar calendar, int dot) {
 		List<Integer> resets = new ArrayList<Integer>();
 
+		// 秒数
 		int second = calendar.get(Calendar.SECOND);
 		List<Integer> emptyList = Collections.emptyList();
 		int updateSecond = findNext(this.seconds, second, calendar, Calendar.SECOND, Calendar.MINUTE, emptyList);
@@ -150,6 +179,7 @@ public class CronSequenceGenerator {
 			resets.add(Calendar.SECOND);
 		}
 
+		// 分钟
 		int minute = calendar.get(Calendar.MINUTE);
 		int updateMinute = findNext(this.minutes, minute, calendar, Calendar.MINUTE, Calendar.HOUR_OF_DAY, resets);
 		if (minute == updateMinute) {
@@ -159,6 +189,7 @@ public class CronSequenceGenerator {
 			doNext(calendar, dot);
 		}
 
+		// 小时
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int updateHour = findNext(this.hours, hour, calendar, Calendar.HOUR_OF_DAY, Calendar.DAY_OF_WEEK, resets);
 		if (hour == updateHour) {
@@ -168,6 +199,7 @@ public class CronSequenceGenerator {
 			doNext(calendar, dot);
 		}
 
+		// 每周
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 		int updateDayOfMonth = findNextDay(calendar, this.daysOfMonth, dayOfMonth, daysOfWeek, dayOfWeek, resets);
@@ -178,6 +210,7 @@ public class CronSequenceGenerator {
 			doNext(calendar, dot);
 		}
 
+		// 月份
 		int month = calendar.get(Calendar.MONTH);
 		int updateMonth = findNext(this.months, month, calendar, Calendar.MONTH, Calendar.YEAR, resets);
 		if (month != updateMonth) {
@@ -190,6 +223,7 @@ public class CronSequenceGenerator {
 
 	}
 
+	// 查询下一天
 	private int findNextDay(Calendar calendar, BitSet daysOfMonth, int dayOfMonth, BitSet daysOfWeek, int dayOfWeek,
 			List<Integer> resets) {
 
@@ -198,7 +232,7 @@ public class CronSequenceGenerator {
 		// the DAY_OF_WEEK values in java.util.Calendar start with 1 (Sunday),
 		// but in the cron pattern, they start with 0, so we subtract 1 here
 		while ((!daysOfMonth.get(dayOfMonth) || !daysOfWeek.get(dayOfWeek - 1)) && count++ < max) {
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			calendar.add(Calendar.DAY_OF_MONTH, 1); // 加1天
 			dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 			dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 			reset(calendar, resets);
@@ -210,8 +244,11 @@ public class CronSequenceGenerator {
 	}
 
 	/**
-	 * Search the bits provided for the next set bit after the value provided,
+	 * 搜索所提供的值后的下一个位图中的位数。
+	 * 
+	 * <p>Search the bits provided for the next set bit after the value provided,
 	 * and reset the calendar.
+	 * 
 	 * @param bits a {@link BitSet} representing the allowed values of the field
 	 * @param value the current value of the field
 	 * @param calendar the calendar to increment as we move through the bits
@@ -249,7 +286,9 @@ public class CronSequenceGenerator {
 	// Parsing logic invoked by the constructor
 
 	/**
-	 * Parse the given pattern expression.
+	 * 解析给定的Cron模式表达式。
+	 * 
+	 * <p>Parse the given pattern expression.
 	 */
 	private void parse(String expression) throws IllegalArgumentException {
 		String[] fields = StringUtils.tokenizeToStringArray(expression, " ");
@@ -271,7 +310,9 @@ public class CronSequenceGenerator {
 	}
 
 	/**
-	 * Replace the values in the commaSeparatedList (case insensitive) with
+	 * 使用列表的索引来替换该值在以逗号分隔的字符串列表的位置。
+	 * 
+	 * <p>Replace the values in the commaSeparatedList (case insensitive) with
 	 * their index in the list.
 	 * @return a new string with the values from the list replaced
 	 */
@@ -284,6 +325,7 @@ public class CronSequenceGenerator {
 		return value;
 	}
 
+	// 设置当月的天数
 	private void setDaysOfMonth(BitSet bits, String field) {
 		int max = 31;
 		// Days of month start with 1 (in Cron and Calendar) so add one
@@ -299,6 +341,7 @@ public class CronSequenceGenerator {
 		setNumberHits(bits, field, 0, max);
 	}
 
+	// 设置月份
 	private void setMonths(BitSet bits, String value) {
 		int max = 12;
 		value = replaceOrdinals(value, "FOO,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC");
@@ -313,6 +356,7 @@ public class CronSequenceGenerator {
 		}
 	}
 
+	// 设置数字的命中位
 	private void setNumberHits(BitSet bits, String value, int min, int max) {
 		String[] fields = StringUtils.delimitedListToStringArray(value, ",");
 		for (String field : fields) {
@@ -322,6 +366,7 @@ public class CronSequenceGenerator {
 				bits.set(range[0], range[1] + 1);
 			}
 			else {
+				// 是一个增量器
 				String[] split = StringUtils.delimitedListToStringArray(field, "/");
 				if (split.length > 2) {
 					throw new IllegalArgumentException("Incrementer has more than two fields: '" +
@@ -339,17 +384,22 @@ public class CronSequenceGenerator {
 		}
 	}
 
+	// 获取该字段的范围
 	private int[] getRange(String field, int min, int max) {
 		int[] result = new int[2];
 		if (field.contains("*")) {
+			// 包括所有值
 			result[0] = min;
 			result[1] = max - 1;
 			return result;
 		}
+		
 		if (!field.contains("-")) {
+			// 具体的数值
 			result[0] = result[1] = Integer.valueOf(field);
 		}
 		else {
+			// 定义范围区间
 			String[] split = StringUtils.delimitedListToStringArray(field, "-");
 			if (split.length > 2) {
 				throw new IllegalArgumentException("Range has more than two fields: '" +
@@ -373,6 +423,8 @@ public class CronSequenceGenerator {
 		return this.expression;
 	}
 
+
+	// 覆盖对象的方法(Object)
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof CronSequenceGenerator)) {
