@@ -22,7 +22,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.ErrorHandler;
 
 /**
- * Runnable wrapper that catches any exception or error thrown from its
+ * 捕获从其委托的Runnable抛出的任何异常或错误的Runnable包装器，
+ * 并允许一个错误处理器({@link ErrorHandler})来处理它。
+ * 
+ * <p>Runnable wrapper that catches any exception or error thrown from its
  * delegate Runnable and allows an {@link ErrorHandler} to handle it.
  *
  * @author Juergen Hoeller
@@ -31,13 +34,18 @@ import org.springframework.util.ErrorHandler;
  */
 public class DelegatingErrorHandlingRunnable implements Runnable {
 
+	// 可运行任务的委托者
 	private final Runnable delegate;
 
+	// 错误处理器
 	private final ErrorHandler errorHandler;
 
 
 	/**
-	 * Create a new DelegatingErrorHandlingRunnable.
+	 * 创建一个新的能处理错误的可运行任务。
+	 * 
+	 * <p>Create a new DelegatingErrorHandlingRunnable.
+	 * 
 	 * @param delegate the Runnable implementation to delegate to
 	 * @param errorHandler the ErrorHandler for handling any exceptions
 	 */
@@ -48,6 +56,12 @@ public class DelegatingErrorHandlingRunnable implements Runnable {
 		this.errorHandler = errorHandler;
 	}
 
+
+	// Runnable
+	/*
+	 * 调用委托的可运行任务来执行，并使用错误处理器来处理错误。
+	 */
+	@Override
 	public void run() {
 		try {
 			this.delegate.run();
@@ -60,6 +74,8 @@ public class DelegatingErrorHandlingRunnable implements Runnable {
 		}
 	}
 
+
+	// Object
 	@Override
 	public String toString() {
 		return "DelegatingErrorHandlingRunnable for " + this.delegate;
