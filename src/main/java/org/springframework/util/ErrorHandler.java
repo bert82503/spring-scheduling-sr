@@ -17,7 +17,11 @@
 package org.springframework.util;
 
 /**
- * A strategy for handling errors. This is especially useful for handling
+ * 一个处理错误的策略。
+ * 当由任务调度器(TaskScheduler)提交的任务在异步执行发生错误时，由它处理这些错误就特别有用。
+ * 在这样情况下，抛出错误给初始调用者是不大可能的。
+ * 
+ * <p>A strategy for handling errors. This is especially useful for handling
  * errors that occur during asynchronous execution of tasks that have been
  * submitted to a TaskScheduler. In such cases, it may not be possible to
  * throw the error to the original caller.
@@ -28,7 +32,9 @@ package org.springframework.util;
 public interface ErrorHandler {
 
 	/**
-	 * Handle the given error, possibly rethrowing it as a fatal exception.
+	 * 处理给定的错误，可能将它作为"一个致命的异常"重新抛出。
+	 * 
+	 * <p>Handle the given error, possibly rethrowing it as a fatal exception.
 	 */
 	void handleError(Throwable t);
 
