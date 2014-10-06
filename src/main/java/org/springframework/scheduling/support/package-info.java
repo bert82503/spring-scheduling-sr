@@ -6,6 +6,7 @@
  * <ul>
  * <li>CronSequenceGenerator：一个Crontab模式的时间序列生成器
  * <li>CronTrigger：cron表达式的触发器实现
+ * <li>DelegatingErrorHandlingRunnable：捕获由其委托的Runnable抛出的任何异常或错误的Runnable包装器，并允许一个错误处理器(ErrorHandler)来处理它
  * <li>MethodInvokingRunnable：实现可运行接口作为一个基于Spring的方法调用者(MethodInvoker)的可配置方法调用的适配器
  * <li>PeriodicTrigger：一个周期性任务执行的触发器
  * <li>ScheduledMethodRunnable：MethodInvokingRunnable的变形
