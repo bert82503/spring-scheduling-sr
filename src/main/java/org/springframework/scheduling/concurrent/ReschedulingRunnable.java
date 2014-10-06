@@ -70,7 +70,7 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 	private final ScheduledExecutorService executor;
 
 	// 可时延调度的Future
-	private ScheduledFuture<Object> currentFuture;
+	private ScheduledFuture<?> currentFuture;
 
 
 	/**
@@ -96,7 +96,6 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 	 *
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public ScheduledFuture<Object> schedule() {
 		synchronized (this.triggerContextMonitor) { // 加锁同步
 			// 确定任务的下一次执行时间
@@ -106,8 +105,7 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 			}
 			// 第一次调度的时延
 			long initialDelay = this.scheduledExecutionTime.getTime() - System.currentTimeMillis();
-			this.currentFuture = (ScheduledFuture<Object>) 
-					this.executor.schedule(this, initialDelay, TimeUnit.MILLISECONDS);
+			this.currentFuture = this.executor.schedule(this, initialDelay, TimeUnit.MILLISECONDS);
 			return this;
 		}
 	}
@@ -158,7 +156,7 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 
 	@Override
 	public Object get() throws InterruptedException, ExecutionException {
-		ScheduledFuture<Object> curr;
+		ScheduledFuture<?> curr;
 		synchronized (this.triggerContextMonitor) {
 			curr = this.currentFuture;
 		}
@@ -167,7 +165,7 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 
 	@Override
 	public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-		ScheduledFuture<Object> curr;
+		ScheduledFuture<?> curr;
 		synchronized (this.triggerContextMonitor) {
 			curr = this.currentFuture;
 		}
@@ -178,7 +176,7 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 	// Delayed implementation
 	@Override
 	public long getDelay(TimeUnit unit) {
-		ScheduledFuture<Object> curr;
+		ScheduledFuture<?> curr;
 		synchronized (this.triggerContextMonitor) {
 			curr = this.currentFuture;
 		}

@@ -132,7 +132,7 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 	public void setQueueCapacity(int queueCapacity) {
 		this.queueCapacity = queueCapacity;
 	}
-	
+
 
 	/**
 	 * Specify whether this FactoryBean should expose an unconfigurable
@@ -221,7 +221,6 @@ public class ThreadPoolExecutorFactoryBean extends ExecutorConfigurationSupport
 		return this.exposedExecutor;
 	}
 
-	
 	/*
 	 * 返回由这个工厂创建的对象类型。
 	 */
