@@ -23,7 +23,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that marks a method as a candidate for <i>asynchronous</i> execution.
+ * 标记一个方法作为异步执行候选者的注解。
+ * 如果在类型级别上使用，则类里面的所有方法都被认为是异步的。
+ * 
+ * <p>在目标方法签名方面，任何参数类型都支持。
+ * 但是，返回类型必须是{@code void}或{@link Future}。
+ * 对于后者，从代理返回的{@code Future}处理将是一个真实的异步{@code Future}，其可用于追踪异步方法执行的结果。
+ * 然而，因为目标方法需要实现相同的签名，它必须返回一个临时的{@code Future}处理，
+ * 通过异步执行结果({@link AsyncResult})来传递返回值。
+ * 
+ * <p>Annotation that marks a method as a candidate for <i>asynchronous</i> execution.
  * Can also be used at the type level, in which case all of the type's methods are
  * considered as asynchronous.
  *
@@ -39,21 +48,31 @@ import java.lang.annotation.Target;
  * @author Juergen Hoeller
  * @author Chris Beams
  * @since 3.0
- * @see AnnotationAsyncExecutionInterceptor
- * @see AsyncAnnotationAdvisor
+ * @see AnnotationAsyncExecutionInterceptor (注解的异步方法执行拦截器)
+ * @see AsyncAnnotationAdvisor (异步方法执行注解通知器)
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE}) // 方法、类型
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Async {
 
 	/**
-	 * A qualifier value for the specified asynchronous operation(s).
+	 * 指定的异步操作的限定符值。
+	 * 
+	 * <p>可用来确定在执行本方法时使用的目标执行器，
+	 * 匹配一个特殊的执行器或任务执行器的bean定义的限定符值(bean名称)。
+	 * 
+	 * <p>当在类级别上指定@Async注解时，表示给定的执行器应该用于该类中的所有方法。
+	 * 方法级别上使用value总会覆盖类级别上设定的任何值。
+	 * 
+	 * <p>A qualifier value for the specified asynchronous operation(s).
+	 * 
 	 * <p>May be used to determine the target executor to be used when executing this
 	 * method, matching the qualifier value (or the bean name) of a specific
 	 * {@link java.util.concurrent.Executor Executor} or
 	 * {@link org.springframework.core.task.TaskExecutor TaskExecutor}
 	 * bean definition.
+	 * 
 	 * <p>When specified on a class level {@code @Async} annotation, indicates that the
 	 * given executor should be used for all methods within the class. Method level use
 	 * of {@link Async#value} always overrides any value set at the class level.
