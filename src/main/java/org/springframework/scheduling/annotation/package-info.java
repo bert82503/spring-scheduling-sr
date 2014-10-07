@@ -11,7 +11,7 @@
  * <li>AsyncAnnotationAdvisor：异步执行注解通知器，通过Async注解激活异步方法执行的通知器
  * <li>AsyncAnnotationBeanPostProcessor：异步执行注解Bean后置处理器，自动应用异步调用行为到任何在类或方法级别携带Async注解的bean的Bean后置处理器
  * <li>AsyncConfigurationSelector：异步执行配置选择器，基于异步模式值(mode)来选择哪个AbstractAsyncConfiguration实现类应该被使用
- * <li>AsyncResult<V>：异步执行结果，一个传递的Future处理
+ * <li>AsyncResult<V>：异步执行结果，一个传递的Future操作
  * <li>ProxyAsyncConfiguration：代理异步执行配置，注册需要启用基于代理的异步方法执行的Spring基础beans的配置类
  * <li>ScheduledAnnotationBeanPostProcessor：调度注解Bean后置处理器，注册使用@Scheduled注解的方法(被TaskScheduler调用)的Bean后置处理器
  * <li>SchedulingConfiguration：调度配置类，注册一个能处理@Scheduled注解的ScheduledAnnotationBeanPostProcessor bean的配置类
