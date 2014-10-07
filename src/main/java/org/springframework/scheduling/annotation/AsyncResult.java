@@ -20,7 +20,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A pass-through {@code Future} handle that can be used for method signatures
+ * 一个传递异步方法执行结果的Future操作，可用于使用一个Future返回类型声明的异步执行方法签名。
+ * 
+ * <p>实现{@link Future<V>}接口
+ * 
+ * <p>A pass-through {@code Future} handle that can be used for method signatures
  * which are declared with a Future return type for asynchronous execution.
  *
  * @author Juergen Hoeller
@@ -29,33 +33,41 @@ import java.util.concurrent.TimeUnit;
  */
 public class AsyncResult<V> implements Future<V> {
 
+	// 异步方法执行的最终结果
 	private final V value;
 
 
 	/**
 	 * Create a new AsyncResult holder.
-	 * @param value the value to pass through
+	 * @param value the value to pass through (待传递的返回结果)
 	 */
 	public AsyncResult(V value) {
 		this.value = value;
 	}
 
+
+	// Future implementation
+	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		return false;
 	}
 
+	@Override
 	public boolean isCancelled() {
 		return false;
 	}
 
+	@Override
 	public boolean isDone() {
 		return true;
 	}
 
+	@Override
 	public V get() {
 		return this.value;
 	}
 
+	@Override
 	public V get(long timeout, TimeUnit unit) {
 		return this.value;
 	}
