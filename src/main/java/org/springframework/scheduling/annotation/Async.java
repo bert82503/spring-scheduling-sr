@@ -60,10 +60,10 @@ public @interface Async {
 	 * 指定的异步操作的限定符值。
 	 * 
 	 * <p>可用来确定在执行本方法时使用的目标执行器，
-	 * 匹配一个特殊的执行器或任务执行器的bean定义的限定符值(bean名称)。
+	 * 匹配一个特殊的执行器({@link Executor})或任务执行器({@link TaskExecutor})的bean定义的限定符值(bean名称)。
 	 * 
-	 * <p>当在类级别上指定@Async注解时，表示给定的执行器应该用于该类中的所有方法。
-	 * 方法级别上使用value总会覆盖类级别上设定的任何值。
+	 * <p>当在类级别上指定{@code @Async}注解时，表示给定的执行器应该用于该类中的所有方法。
+	 * 方法级别上使用{@link Async#value}总会覆盖类级别上设定的任何值。
 	 * 
 	 * <p>A qualifier value for the specified asynchronous operation(s).
 	 * 
