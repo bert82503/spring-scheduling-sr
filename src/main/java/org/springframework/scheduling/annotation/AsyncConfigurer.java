@@ -19,7 +19,12 @@ package org.springframework.scheduling.annotation;
 import java.util.concurrent.Executor;
 
 /**
- * Interface to be implemented by @{@link org.springframework.context.annotation.Configuration
+ * 用于实现配置类(@{@link Configuration})和@{@link EnableAsync}注解的接口，
+ * 希望在处理异步方法调用时使用自定义的执行器({@link Executor})实例。
+ * 
+ * <p>见@{@link EnableAsync}的使用示例。
+ * 
+ * <p>Interface to be implemented by @{@link org.springframework.context.annotation.Configuration
  * Configuration} classes annotated with @{@link EnableAsync} that wish to customize the
  * {@link Executor} instance used when processing async method invocations.
  *
@@ -33,7 +38,9 @@ import java.util.concurrent.Executor;
 public interface AsyncConfigurer {
 
 	/**
-	 * The {@link Executor} instance to be used when processing async
+	 * 在处理异步方法调用时使用的执行器({@link Executor})实例。
+	 * 
+	 * <p>The {@link Executor} instance to be used when processing async
 	 * method invocations.
 	 */
 	Executor getAsyncExecutor();
