@@ -17,7 +17,13 @@
 package org.springframework.beans.factory;
 
 /**
- * Marker superinterface indicating that a bean is eligible to be
+ * 感知标记超接口，表示一个bean有资格被由特定框架对象的Spring容器
+ * 通过"一个回调方式的方法"通知。实际的方法签名取决于子接口的实现，
+ * 但它通常应该由接受一个参数和返回{@code void}的方法组成。
+ * 
+ * <p><font color="red">注意：仅仅实现未提供任何默认功能的{@link Aware}接口。</font>
+ * 
+ * <p>Marker superinterface indicating that a bean is eligible to be
  * notified by the Spring container of a particular framework object
  * through a callback-style method. Actual method signature is
  * determined by individual subinterfaces, but should typically
@@ -31,7 +37,7 @@ package org.springframework.beans.factory;
  * and {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory}
  * for examples of processing {@code *Aware} interface callbacks.
  *
- * @author Chris Beams
+ * @author Cries Beams
  * @since 3.1
  */
 public interface Aware {
